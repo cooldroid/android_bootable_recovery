@@ -25,6 +25,7 @@ else
 endif
 
 ifeq ($(PROJECT_PATH_AGREES),true)
+ifeq ($(RECOVERY_VARIANT),twrp)
 
 include $(CLEAR_VARS)
 
@@ -350,7 +351,8 @@ ifeq ($(TW_INCLUDE_DUMLOCK), true)
 endif
 ifneq ($(TW_EXCLUDE_SUPERSU), true)
     LOCAL_ADDITIONAL_DEPENDENCIES += \
-        su install-recovery.sh 99SuperSUDaemon Superuser.apk
+        su install-recovery.sh 99SuperSUDaemon Superuser.apk \
+        chattr.pie install-supersu.sh libsupol.so supolicy
 endif
 ifneq ($(TW_NO_EXFAT_FUSE), true)
     LOCAL_ADDITIONAL_DEPENDENCIES += exfat-fuse
@@ -525,4 +527,5 @@ endif
 
 commands_recovery_local_path :=
 
+endif
 endif
