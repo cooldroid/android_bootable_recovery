@@ -345,6 +345,12 @@ int main(int argc, char **argv) {
 	if (crash_counter == 0)
 		TWFunc::Fixup_Time_On_Boot();
 
+#ifdef TW_UNMOUNT_FIRMWARE_ON_BOOT
+	if (PartitionManager.Is_Mounted_By_Path("/firmware")) {
+		PartitionManager.UnMount_By_Path("/firmware", false);
+	}
+#endif
+
 	// Run any outstanding OpenRecoveryScript
 #ifndef TARGET_RECOVERY_IS_MULTIROM
 	if (DataManager::GetIntValue(TW_IS_ENCRYPTED) == 0 && (TWFunc::Path_Exists(SCRIPT_FILE_TMP) || TWFunc::Path_Exists(SCRIPT_FILE_CACHE))) {
