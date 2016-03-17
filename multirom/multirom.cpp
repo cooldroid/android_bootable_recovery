@@ -44,6 +44,7 @@ std::string MultiROM::m_mount_rom_paths[2] = { "", "" };
 std::string MultiROM::m_curr_roms_path = "";
 MROMInstaller *MultiROM::m_installer = NULL;
 MultiROM::baseFolders MultiROM::m_base_folders;
+bool mtp_was_enabled = false;
 int MultiROM::m_base_folder_cnt = 0;
 bool MultiROM::m_has_firmware = false;
 
@@ -691,6 +692,8 @@ bool MultiROM::changeMounts(std::string name)
 {
 	gui_print("Changing mounts to ROM %s...\n", name.c_str());
 
+	mtp_was_enabled = TWFunc::Toggle_MTP(false);
+
 	int type = getType(name);
 	std::string base = getRomsPath() + name;
 	normalizeROMPath(base);
@@ -727,6 +730,7 @@ bool MultiROM::changeMounts(std::string name)
 		m_path.clear();
 		PartitionManager.Pop_Context();
 		PartitionManager.Update_System_Details();
+		TWFunc::Toggle_MTP(mtp_was_enabled);
 		return false;
 	}
 
@@ -751,6 +755,7 @@ bool MultiROM::changeMounts(std::string name)
 		gui_print("Failed to mount realdata, canceling!\n");
 		PartitionManager.Pop_Context();
 		PartitionManager.Update_System_Details();
+		TWFunc::Toggle_MTP(mtp_was_enabled);
 		return false;
 	}
 
@@ -798,6 +803,7 @@ bool MultiROM::changeMounts(std::string name)
 		realdata->UnMount(false);
 		PartitionManager.Pop_Context();
 		PartitionManager.Update_System_Details();
+		TWFunc::Toggle_MTP(mtp_was_enabled);
 		return false;
 	}
 
@@ -877,6 +883,8 @@ void MultiROM::restoreMounts()
 	// The storage path gets set to wrong fake data when restored above, call it again
 	// with the the path to call Data::SetBackupFolder() again.
 	DataManager::SetValue("tw_storage_path", DataManager::GetStrValue("tw_storage_path"));
+
+	TWFunc::Toggle_MTP(mtp_was_enabled);
 
 	restoreROMPath();
 }
