@@ -8,6 +8,7 @@
 #include <vector>
 #include <errno.h>
 #include <sys/mount.h>
+#include <stdlib.h>
 
 #include "../data.hpp"
 #include "mrominstaller.h"
